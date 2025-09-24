@@ -7,6 +7,7 @@ const API_BASE_URL = 'http://localhost:8080/api';
 const authSection = document.getElementById('auth-section');
 const dashboardSection = document.getElementById('dashboard-section');
 const navbar = document.getElementById('navbar');
+const authNavbar = document.getElementById('auth-navbar');
 const loginForm = document.getElementById('login-form');
 const signupForm = document.getElementById('signup-form');
 const logoutBtn = document.getElementById('logout-btn');
@@ -234,12 +235,14 @@ function showAuthSection() {
     authSection.style.display = 'block';
     dashboardSection.style.display = 'none';
     navbar.style.display = 'none';
+    authNavbar.style.display = 'block';
 }
 
 function showDashboard() {
     authSection.style.display = 'none';
     dashboardSection.style.display = 'block';
     navbar.style.display = 'block';
+    authNavbar.style.display = 'none';
     usernameDisplay.textContent = currentUser.username;
 }
 
