@@ -217,14 +217,25 @@ h4 {
 .input-group {
     border-radius: var(--border-radius);
     overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    height: 46px;
 }
 
 .input-group .form-control {
     border-right: none;
+    height: 100%;
+    flex: 1;
 }
 
 .input-group .btn {
     border-left: none;
+    height: 100%;
+    min-height: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
 }
 
 /* ====== TASK FORM ====== */
@@ -569,6 +580,15 @@ body.dark-mode #recurring-settings {
     .btn {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
+    }
+    
+    .input-group {
+        height: 42px;
+    }
+    
+    .input-group .btn {
+        min-height: unset;
+        padding: 0.5rem 1rem;
     }
     
     #task-list-container {
