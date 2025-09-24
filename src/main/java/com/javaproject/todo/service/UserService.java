@@ -30,8 +30,11 @@ public class UserService {
     private AuthenticationManager authenticationManager;
     
     public User registerUser(SignupRequest signUpRequest) {
+        System.out.println("DEBUG: Starting user registration for username: " + signUpRequest.getUsername());
+        System.out.println("DEBUG: Email: " + signUpRequest.getEmail());
+        
         // Create new user's account
-        User user = new User(signUpRequest.getUsername(), 
+        User user = new User(signUpRequest.getUsername(),
                              signUpRequest.getEmail(),
                              passwordEncoder.encode(signUpRequest.getPassword()));
         
@@ -39,7 +42,13 @@ public class UserService {
         roles.add(Role.ROLE_USER);
         user.setRoles(roles);
         
-        return userRepository.save(user);
+        System.out.println("DEBUG: About to save user to database");
+        User savedUser = userRepository.save(user);
+        System.out.println("DEBUG: User saved with ID: " + savedUser.getId());
+        System.out.println("DEBUG: User saved with username: " + savedUser.getUsername());
+        System.out.println("DEBUG: User saved with email: " + savedUser.getEmail());
+        
+        return savedUser;
     }
     
     public UserPrinciple authenticateUser(LoginRequest loginRequest) {

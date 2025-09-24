@@ -35,11 +35,15 @@ public class TaskController {
     public ResponseEntity<?> createTask(@Valid @RequestBody TaskRequest taskRequest,
                                        @AuthenticationPrincipal UserPrinciple userPrinciple) {
         try {
+            System.out.println("DEBUG: Creating task with dueDate: " + taskRequest.getDueDate());
+            System.out.println("DEBUG: User principle: " + (userPrinciple != null ? userPrinciple.getUsername() : "null"));
             User user = userRepository.findById(userPrinciple.getId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
             TaskResponse taskResponse = taskService.createTask(taskRequest, user);
             return ResponseEntity.ok(taskResponse);
         } catch (Exception e) {
+            System.out.println("DEBUG: Error creating task: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
         }
     }

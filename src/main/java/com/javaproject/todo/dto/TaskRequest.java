@@ -6,7 +6,7 @@ import com.javaproject.todo.model.TaskPriority;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class TaskRequest {
     
@@ -15,8 +15,8 @@ public class TaskRequest {
     
     private String description;
     
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime dueDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private ZonedDateTime dueDate;
     
     @NotNull(message = "Priority is required")
     private TaskPriority priority;
@@ -27,7 +27,7 @@ public class TaskRequest {
     public TaskRequest() {
     }
     
-    public TaskRequest(String title, String description, LocalDateTime dueDate, TaskPriority priority, TaskCategory category) {
+    public TaskRequest(String title, String description, ZonedDateTime dueDate, TaskPriority priority, TaskCategory category) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -51,11 +51,11 @@ public class TaskRequest {
         this.description = description;
     }
     
-    public LocalDateTime getDueDate() {
+    public ZonedDateTime getDueDate() {
         return dueDate;
     }
     
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(ZonedDateTime dueDate) {
         this.dueDate = dueDate;
     }
     

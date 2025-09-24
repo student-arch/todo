@@ -2,6 +2,8 @@ package com.javaproject.todo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "tasks")
@@ -121,6 +123,15 @@ public class Task {
 
     public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
+    }
+    
+    // Helper method to accept ZonedDateTime and convert to LocalDateTime
+    public void setDueDate(ZonedDateTime zonedDueDate) {
+        if (zonedDueDate != null) {
+            this.dueDate = zonedDueDate.toLocalDateTime();
+        } else {
+            this.dueDate = null;
+        }
     }
 
     public User getUser() {

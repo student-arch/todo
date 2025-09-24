@@ -32,11 +32,17 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             String jwt = parseJwt(request);
+            System.out.println("DEBUG: Processing request for URI: " + request.getRequestURI());
+            System.out.println("DEBUG: JWT Token: " + (jwt != null ? "Present" : "Missing"));
+            if (jwt != null) {
+                System.out.println("DEBUG: JWT Token value: " + jwt.substring(0, Math.min(jwt.length(), 20)) + "...");
+            }
             logger.debug("Processing request for URI: {}", request.getRequestURI());
             logger.debug("JWT Token: {}", jwt != null ? "Present" : "Missing");
             
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                System.out.println("DEBUG: Username from JWT: " + username);
                 logger.debug("Username from JWT: {}", username);
                 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -46,11 +52,18 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("DEBUG: Authentication set for user: " + username);
                 logger.debug("Authentication set for user: {}", username);
             } else {
+                System.out.println("DEBUG: No valid JWT token found for URI: " + request.getRequestURI());
+                if (jwt != null) {
+                    System.out.println("DEBUG: JWT validation failed");
+                }
                 logger.debug("No valid JWT token found for URI: {}", request.getRequestURI());
             }
         } catch (Exception e) {
+            System.out.println("DEBUG: Cannot set user authentication: " + e.getMessage());
+            e.printStackTrace();
             logger.error("Cannot set user authentication: {}", e);
         }
         

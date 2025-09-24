@@ -253,11 +253,16 @@ async function fetchTasks() {
     showLoading(true);
     
     try {
+        console.log('DEBUG: Fetching tasks with auth token:', authToken ? 'Present' : 'Missing');
+        if (authToken) {
+            console.log('DEBUG: Auth token first 20 chars:', authToken.substring(0, 20));
+        }
         const response = await fetch(`${API_BASE_URL}/tasks`, {
             headers: {
                 'Authorization': `Bearer ${authToken}`
             }
         });
+        console.log('DEBUG: Fetch tasks response status:', response.status);
         
         if (response.ok) {
             tasks = await response.json();
@@ -404,13 +409,21 @@ async function handleTaskSubmit(e) {
     showLoading(true);
     
     // Create task request object
+    const dueDateObj = new Date(dueDate);
+    const dueDateIso = dueDateObj.toISOString();
+    console.log('DEBUG: Original due date:', dueDate);
+    console.log('DEBUG: Due date object:', dueDateObj);
+    console.log('DEBUG: Due date ISO string:', dueDateIso);
+    
     const taskRequest = {
         title,
         description,
-        dueDate: new Date(dueDate).toISOString(),
+        dueDate: dueDateIso,
         priority: priority.toUpperCase(),
         category: category.toUpperCase()
     };
+    
+    console.log('DEBUG: Task request object:', taskRequest);
     
     try {
         let response;

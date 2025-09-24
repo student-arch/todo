@@ -27,7 +27,7 @@ public class TaskService {
         Task task = new Task();
         task.setTitle(taskRequest.getTitle());
         task.setDescription(taskRequest.getDescription());
-        task.setDueDate(taskRequest.getDueDate());
+        task.setDueDate(taskRequest.getDueDate()); // This will now use the ZonedDateTime method
         task.setPriority(taskRequest.getPriority());
         task.setCategory(taskRequest.getCategory());
         task.setUser(user);
@@ -140,7 +140,7 @@ public class TaskService {
         
         task.setTitle(taskRequest.getTitle());
         task.setDescription(taskRequest.getDescription());
-        task.setDueDate(taskRequest.getDueDate());
+        task.setDueDate(taskRequest.getDueDate()); // This will now use the ZonedDateTime method
         task.setPriority(taskRequest.getPriority());
         task.setCategory(taskRequest.getCategory());
         
