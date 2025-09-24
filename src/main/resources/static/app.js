@@ -635,19 +635,13 @@ function applyFilters() {
 
 // Mobile Responsiveness
 function handleMobileResponsiveness() {
-    const isMobile = window.innerWidth < 576;
-    
-    if (isMobile) {
-        // Adjust mobile layout if needed
-        document.querySelectorAll('.task-item').forEach(item => {
-            item.classList.add('col-12');
-            item.classList.remove('col-md-4');
-        });
-    } else {
-        // Reset to desktop layout
-        document.querySelectorAll('.task-item').forEach(item => {
-            item.classList.remove('col-12');
-            item.classList.add('col-md-4');
-        });
+    // This function is now primarily handled by CSS Grid
+    // We'll keep it for any future JavaScript-based responsive adjustments
+    const container = document.getElementById('task-list-container');
+    if (container) {
+        // Force a reflow to ensure the grid updates properly
+        container.style.display = 'none';
+        container.offsetHeight; // Trigger reflow
+        container.style.display = 'grid';
     }
 }
