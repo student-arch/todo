@@ -33,6 +33,14 @@ public class TaskService {
         task.setUser(user);
         task.setCompleted(false);
         
+        // Set new fields
+        task.setReminderEnabled(taskRequest.getReminderEnabled() != null ? taskRequest.getReminderEnabled() : false);
+        task.setReminderTime(taskRequest.getReminderTime());
+        task.setIsRecurring(taskRequest.getIsRecurring() != null ? taskRequest.getIsRecurring() : false);
+        task.setRecurringPattern(taskRequest.getRecurringPattern());
+        task.setRecurringEndDate(taskRequest.getRecurringEndDate());
+        task.setPositionOrder(taskRequest.getPositionOrder() != null ? taskRequest.getPositionOrder() : 0);
+        
         Task savedTask = taskRepository.save(task);
         return convertToTaskResponse(savedTask);
     }
@@ -144,6 +152,26 @@ public class TaskService {
         task.setPriority(taskRequest.getPriority());
         task.setCategory(taskRequest.getCategory());
         
+        // Update new fields if provided
+        if (taskRequest.getReminderEnabled() != null) {
+            task.setReminderEnabled(taskRequest.getReminderEnabled());
+        }
+        if (taskRequest.getReminderTime() != null) {
+            task.setReminderTime(taskRequest.getReminderTime());
+        }
+        if (taskRequest.getIsRecurring() != null) {
+            task.setIsRecurring(taskRequest.getIsRecurring());
+        }
+        if (taskRequest.getRecurringPattern() != null) {
+            task.setRecurringPattern(taskRequest.getRecurringPattern());
+        }
+        if (taskRequest.getRecurringEndDate() != null) {
+            task.setRecurringEndDate(taskRequest.getRecurringEndDate());
+        }
+        if (taskRequest.getPositionOrder() != null) {
+            task.setPositionOrder(taskRequest.getPositionOrder());
+        }
+        
         Task updatedTask = taskRepository.save(task);
         return convertToTaskResponse(updatedTask);
     }
@@ -196,7 +224,13 @@ public class TaskService {
                 task.getCreatedAt(),
                 task.getUpdatedAt(),
                 task.getDueDate(),
-                task.getUser().getId()
+                task.getUser().getId(),
+                task.getReminderEnabled(),
+                task.getReminderTime(),
+                task.getIsRecurring(),
+                task.getRecurringPattern(),
+                task.getRecurringEndDate(),
+                task.getPositionOrder()
         );
     }
 }

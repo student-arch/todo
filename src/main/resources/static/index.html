@@ -62,6 +62,71 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
+        .dragging {
+            opacity: 0.5;
+        }
+        .drag-over {
+            border: 2px dashed #4361ee;
+        }
+        .dark-mode {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+        .dark-mode .card,
+        .dark-mode .auth-section,
+        .dark-mode .filter-section,
+        .dark-mode .task-form-section,
+        .dark-mode .task-list-section {
+            background-color: #343a40;
+            color: #f8f9fa;
+        }
+        .dark-mode .form-control,
+        .dark-mode .form-select {
+            background-color: #495057;
+            color: #f8f9fa;
+            border-color: #6c757d;
+        }
+        .dark-mode .form-label {
+            color: #f8f9fa;
+        }
+        .dark-mode .navbar {
+            background-color: #343a40 !important;
+        }
+        .dark-mode .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+        .dark-mode .nav-link:hover, .dark-mode .nav-link.active {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .dark-mode .navbar-text {
+            color: rgba(255, 255, 255, 0.85) !important;
+        }
+        .dark-mode .btn-outline-light {
+            color: #f8f9fa;
+            border-color: #f8f9fa;
+        }
+        .dark-mode .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #f8f9fa;
+        }
+        .dark-mode .card-title,
+        .dark-mode .card-text,
+        .dark-mode h4,
+        .dark-mode .text-muted {
+            color: #f8f9fa !important;
+        }
+        .dark-mode .dropdown-menu {
+            background-color: #343a40;
+            color: #f8f9fa;
+        }
+        .dark-mode .dropdown-item {
+            color: #f8f9fa;
+        }
+        .dark-mode .dropdown-item:hover {
+            background-color: #495057;
+            color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
@@ -85,6 +150,9 @@
                     <span class="navbar-text me-3">
                         Welcome, <span id="username">User</span>
                     </span>
+                    <button class="btn btn-outline-light me-2" id="theme-toggle" title="Toggle theme">
+                        <i class="bi bi-moon-fill" id="theme-icon"></i>
+                    </button>
                     <button class="btn btn-outline-light" id="logout-btn">
                         <i class="bi bi-box-arrow-right"></i> Logout
                     </button>
@@ -148,6 +216,26 @@
 
         <!-- Dashboard Section -->
         <div class="dashboard-section" id="dashboard-section">
+            <!-- Progress Tracker -->
+            <div class="progress-section mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Task Progress</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Completion Progress</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-muted">Total: <span id="total-tasks">0</span> tasks</small>
+                            <small class="text-muted">Completed: <span id="completed-tasks">0</span> tasks</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Search and Filter Controls -->
             <div class="filter-section">
                 <h4 class="mb-3">Search and Filter</h4>
@@ -194,6 +282,7 @@
                             <option value="dueDate">Due Date</option>
                             <option value="createdDate">Created Date</option>
                             <option value="priority">Priority</option>
+                            <option value="position">Position</option>
                         </select>
                     </div>
                 </div>
@@ -244,6 +333,52 @@
                         <label for="task-description" class="form-label">Description</label>
                         <textarea class="form-control" id="task-description" rows="3"></textarea>
                     </div>
+                    
+                    <!-- Reminder Settings -->
+                    <div class="mt-3">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="reminder-enabled">
+                            <label class="form-check-label" for="reminder-enabled">Enable Reminder</label>
+                        </div>
+                        <div class="row g-3" id="reminder-settings" style="display: none;">
+                            <div class="col-md-6">
+                                <label for="reminder-time" class="form-label">Reminder Time</label>
+                                <input type="datetime-local" class="form-control" id="reminder-time">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="reminder-before" class="form-label">Remind Before (minutes)</label>
+                                <select class="form-select" id="reminder-before">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30" selected>30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="1440">1 day</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recurring Task Settings -->
+                    <div class="mt-3">
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="recurring-enabled">
+                            <label class="form-check-label" for="recurring-enabled">Recurring Task</label>
+                        </div>
+                        <div class="row g-3" id="recurring-settings" style="display: none;">
+                            <div class="col-md-4">
+                                <label for="recurring-pattern" class="form-label">Repeat Pattern</label>
+                                <select class="form-select" id="recurring-pattern">
+                                    <option value="DAILY">Daily</option>
+                                    <option value="WEEKLY">Weekly</option>
+                                    <option value="MONTHLY">Monthly</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="recurring-end-date" class="form-label">End Date (Optional)</label>
+                                <input type="date" class="form-control" id="recurring-end-date">
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="mt-3">
                         <button type="submit" class="btn btn-primary" id="save-task-btn">Save Task</button>
                         <button type="button" class="btn btn-secondary" id="cancel-task-btn">Cancel</button>
@@ -255,7 +390,12 @@
             <div class="task-list-section">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4>Tasks</h4>
-                    <span class="badge bg-primary" id="task-count">0 tasks</span>
+                    <div>
+                        <span class="badge bg-primary me-2" id="task-count">0 tasks</span>
+                        <button class="btn btn-sm btn-outline-secondary" id="reorder-toggle" title="Enable drag and drop to reorder tasks">
+                            <i class="bi bi-arrows-move"></i> Reorder
+                        </button>
+                    </div>
                 </div>
                 <div class="row" id="task-list-container">
                     <!-- Tasks will be dynamically loaded here -->
@@ -270,7 +410,7 @@
 
     <!-- Task Template (Hidden) -->
     <template id="task-template">
-        <div class="task-item">
+        <div class="task-item" draggable="false" data-task-id="">
             <div class="card task-card h-100" data-priority="">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
@@ -288,6 +428,17 @@
                         </div>
                     </div>
                     <p class="card-text task-description"></p>
+                    
+                    <!-- Reminder and Recurring Indicators -->
+                    <div class="mb-2">
+                        <span class="badge bg-warning text-dark me-1 reminder-indicator" style="display: none;">
+                            <i class="bi bi-bell"></i> Reminder
+                        </span>
+                        <span class="badge bg-info me-1 recurring-indicator" style="display: none;">
+                            <i class="bi bi-arrow-repeat"></i> <span class="recurring-pattern-text"></span>
+                        </span>
+                    </div>
+                    
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div>
                             <span class="badge bg-info task-category me-1" data-category=""></span>
@@ -297,9 +448,14 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent border-top-0">
-                    <div class="form-check">
-                        <input class="form-check-input task-status-checkbox" type="checkbox">
-                        <label class="form-check-label task-status-label"></label>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input task-status-checkbox" type="checkbox">
+                            <label class="form-check-label task-status-label"></label>
+                        </div>
+                        <div class="drag-handle" style="display: none; cursor: move;">
+                            <i class="bi bi-grip-vertical text-muted"></i>
+                        </div>
                     </div>
                 </div>
             </div>

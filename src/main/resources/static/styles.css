@@ -163,6 +163,35 @@ body {
     padding: 2rem 0;
 }
 
+/* ====== PROGRESS SECTION ====== */
+.progress-section {
+    margin-bottom: 1.5rem;
+}
+
+.progress-section .card {
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.progress-section .card:hover {
+    box-shadow: var(--shadow);
+}
+
+.progress {
+    height: 20px;
+    border-radius: var(--border-radius);
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: width 0.6s ease;
+}
+
+/* ====== FILTER SECTION ====== */
 .filter-section, .task-form-section, .task-list-section {
     background-color: var(--white-color);
     padding: 1.5rem;
@@ -223,6 +252,28 @@ textarea.form-control {
     background-color: #5a6268;
     border-color: #545b62;
     transform: translateY(-2px);
+}
+
+/* ====== REMINDER AND RECURRING SETTINGS ====== */
+#reminder-settings, #recurring-settings {
+    background-color: rgba(67, 97, 238, 0.05);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-top: 0.5rem;
+}
+
+.form-switch {
+    margin-bottom: 0.5rem;
+}
+
+.form-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 /* ====== TASK LIST ====== */
@@ -385,6 +436,92 @@ textarea.form-control {
     font-weight: 500;
 }
 
+/* ====== DRAG AND DROP STYLES ====== */
+.dragging {
+    opacity: 0.5;
+    transform: rotate(5deg);
+}
+
+.drag-over {
+    border: 2px dashed var(--primary-color);
+}
+
+.drag-handle {
+    cursor: move;
+    transition: var(--transition);
+}
+
+.drag-handle:hover {
+    color: var(--primary-color) !important;
+}
+
+#reorder-toggle {
+    transition: var(--transition);
+}
+
+#reorder-toggle.active {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-color: var(--primary-color);
+}
+
+/* ====== REMINDER AND RECURRING INDICATORS ====== */
+.reminder-indicator, .recurring-indicator {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* ====== DARK MODE STYLES ====== */
+body.dark-mode {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+}
+
+body.dark-mode .auth-section,
+body.dark-mode .filter-section,
+body.dark-mode .task-form-section,
+body.dark-mode .task-list-section,
+body.dark-mode .card,
+body.dark-mode .dropdown-menu {
+    background-color: #343a40;
+    color: var(--light-color);
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #495057;
+    color: var(--light-color);
+    border-color: #6c757d;
+}
+
+body.dark-mode .form-label {
+    color: var(--light-color);
+}
+
+body.dark-mode .navbar {
+    background-color: #343a40 !important;
+}
+
+body.dark-mode .card-title,
+body.dark-mode .card-text,
+body.dark-mode h4,
+body.dark-mode .text-muted {
+    color: var(--light-color) !important;
+}
+
+body.dark-mode .dropdown-item {
+    color: var(--light-color);
+}
+
+body.dark-mode .dropdown-item:hover {
+    background-color: #495057;
+}
+
+body.dark-mode #reminder-settings,
+body.dark-mode #recurring-settings {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
 /* ====== RESPONSIVE DESIGN ====== */
 
 /* Mobile devices (phones) */
@@ -459,6 +596,10 @@ textarea.form-control {
     
     .navbar-text {
         display: none;
+    }
+    
+    .progress-section .card {
+        margin-bottom: 1rem;
     }
 }
 

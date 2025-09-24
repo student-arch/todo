@@ -3,9 +3,11 @@ package com.javaproject.todo.controller;
 import com.javaproject.todo.dto.MessageResponse;
 import com.javaproject.todo.dto.TaskRequest;
 import com.javaproject.todo.dto.TaskResponse;
+import com.javaproject.todo.model.Task;
 import com.javaproject.todo.model.TaskCategory;
 import com.javaproject.todo.model.TaskPriority;
 import com.javaproject.todo.model.User;
+import com.javaproject.todo.repository.TaskRepository;
 import com.javaproject.todo.repository.UserRepository;
 import com.javaproject.todo.security.UserPrinciple;
 import com.javaproject.todo.service.TaskService;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +32,9 @@ public class TaskController {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private TaskRepository taskRepository;
     
     @PostMapping
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -153,6 +159,89 @@ public class TaskController {
             return ResponseEntity.ok(taskResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/{id}/reorder")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> reorderTask(@PathVariable Long id,
+                                      @RequestParam Integer newPosition,
+                                      @AuthenticationPrincipal UserPrinciple userPrinciple) {
+        try {
+            User user = userRepository.findById(userPrinciple.getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            Task task = taskRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Task not found"));
+            
+            if (!task.getUser().getId().equals(user.getId())) {
+                return ResponseEntity.badRequest().body(new MessageResponse("You are not authorized to update this task"));
+            }
+            
+            // Update position
+            task.setPositionOrder(newPosition);
+            taskRepository.save(task);
+            
+            return ResponseEntity.ok(new MessageResponse("Task position updated successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/progress")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getTaskProgress(@AuthenticationPrincipal UserPrinciple userPrinciple) {
+        try {
+            User user = userRepository.findById(userPrinciple.getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            List<Task> tasks = taskRepository.findByUser(user);
+            
+            long totalTasks = tasks.size();
+            long completedTasks = tasks.stream().filter(Task::getCompleted).count();
+            
+            double progressPercentage = totalTasks > 0 ? (double) completedTasks / totalTasks * 100 : 0;
+            
+            return ResponseEntity.ok(new ProgressResponse(totalTasks, completedTasks, progressPercentage));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage()));
+        }
+    }
+    
+    // Inner class for progress response
+    public static class ProgressResponse {
+        private long totalTasks;
+        private long completedTasks;
+        private double progressPercentage;
+        
+        public ProgressResponse(long totalTasks, long completedTasks, double progressPercentage) {
+            this.totalTasks = totalTasks;
+            this.completedTasks = completedTasks;
+            this.progressPercentage = progressPercentage;
+        }
+
+        public long getTotalTasks() {
+            return totalTasks;
+        }
+
+        public void setTotalTasks(long totalTasks) {
+            this.totalTasks = totalTasks;
+        }
+
+        public long getCompletedTasks() {
+            return completedTasks;
+        }
+
+        public void setCompletedTasks(long completedTasks) {
+            this.completedTasks = completedTasks;
+        }
+
+        public double getProgressPercentage() {
+            return progressPercentage;
+        }
+
+        public void setProgressPercentage(double progressPercentage) {
+            this.progressPercentage = progressPercentage;
         }
     }
 }

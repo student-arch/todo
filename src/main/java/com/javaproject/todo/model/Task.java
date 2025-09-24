@@ -43,10 +43,31 @@ public class Task {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
+    @Column(name = "reminder_enabled")
+    private Boolean reminderEnabled;
+    
+    @Column(name = "reminder_time")
+    private LocalDateTime reminderTime;
+    
+    @Column(name = "is_recurring")
+    private Boolean isRecurring;
+    
+    @Column(name = "recurring_pattern")
+    private String recurringPattern;
+    
+    @Column(name = "recurring_end_date")
+    private LocalDateTime recurringEndDate;
+    
+    @Column(name = "position_order")
+    private Integer positionOrder;
+    
     public Task() {
         this.completed = false;
         this.priority = TaskPriority.MEDIUM;
         this.category = TaskCategory.OTHER;
+        this.reminderEnabled = false;
+        this.isRecurring = false;
+        this.positionOrder = 0;
     }
     
     public Task(String title, String description, User user) {
@@ -56,6 +77,9 @@ public class Task {
         this.completed = false;
         this.priority = TaskPriority.MEDIUM;
         this.category = TaskCategory.OTHER;
+        this.reminderEnabled = false;
+        this.isRecurring = false;
+        this.positionOrder = 0;
     }
     
     @PrePersist
@@ -156,5 +180,71 @@ public class Task {
 
     public void setCategory(TaskCategory category) {
         this.category = category;
+    }
+
+    public Boolean getReminderEnabled() {
+        return reminderEnabled;
+    }
+
+    public void setReminderEnabled(Boolean reminderEnabled) {
+        this.reminderEnabled = reminderEnabled;
+    }
+
+    public LocalDateTime getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(LocalDateTime reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
+    // Helper method to accept ZonedDateTime and convert to LocalDateTime for reminder time
+    public void setReminderTime(ZonedDateTime zonedReminderTime) {
+        if (zonedReminderTime != null) {
+            this.reminderTime = zonedReminderTime.toLocalDateTime();
+        } else {
+            this.reminderTime = null;
+        }
+    }
+
+    public Boolean getIsRecurring() {
+        return isRecurring;
+    }
+
+    public void setIsRecurring(Boolean isRecurring) {
+        this.isRecurring = isRecurring;
+    }
+
+    public String getRecurringPattern() {
+        return recurringPattern;
+    }
+
+    public void setRecurringPattern(String recurringPattern) {
+        this.recurringPattern = recurringPattern;
+    }
+
+    public LocalDateTime getRecurringEndDate() {
+        return recurringEndDate;
+    }
+
+    public void setRecurringEndDate(LocalDateTime recurringEndDate) {
+        this.recurringEndDate = recurringEndDate;
+    }
+
+    // Helper method to accept ZonedDateTime and convert to LocalDateTime for recurring end date
+    public void setRecurringEndDate(ZonedDateTime zonedRecurringEndDate) {
+        if (zonedRecurringEndDate != null) {
+            this.recurringEndDate = zonedRecurringEndDate.toLocalDateTime();
+        } else {
+            this.recurringEndDate = null;
+        }
+    }
+
+    public Integer getPositionOrder() {
+        return positionOrder;
+    }
+
+    public void setPositionOrder(Integer positionOrder) {
+        this.positionOrder = positionOrder;
     }
 }

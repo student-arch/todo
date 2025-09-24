@@ -24,6 +24,20 @@ public class TaskRequest {
     @NotNull(message = "Category is required")
     private TaskCategory category;
     
+    private Boolean reminderEnabled;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private ZonedDateTime reminderTime;
+    
+    private Boolean isRecurring;
+    
+    private String recurringPattern; // 'DAILY', 'WEEKLY', 'MONTHLY'
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private ZonedDateTime recurringEndDate;
+    
+    private Integer positionOrder;
+    
     public TaskRequest() {
     }
     
@@ -73,5 +87,53 @@ public class TaskRequest {
     
     public void setCategory(TaskCategory category) {
         this.category = category;
+    }
+
+    public Boolean getReminderEnabled() {
+        return reminderEnabled;
+    }
+
+    public void setReminderEnabled(Boolean reminderEnabled) {
+        this.reminderEnabled = reminderEnabled;
+    }
+
+    public ZonedDateTime getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(ZonedDateTime reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
+    public Boolean getIsRecurring() {
+        return isRecurring;
+    }
+
+    public void setIsRecurring(Boolean isRecurring) {
+        this.isRecurring = isRecurring;
+    }
+
+    public String getRecurringPattern() {
+        return recurringPattern;
+    }
+
+    public void setRecurringPattern(String recurringPattern) {
+        this.recurringPattern = recurringPattern;
+    }
+
+    public ZonedDateTime getRecurringEndDate() {
+        return recurringEndDate;
+    }
+
+    public void setRecurringEndDate(ZonedDateTime recurringEndDate) {
+        this.recurringEndDate = recurringEndDate;
+    }
+
+    public Integer getPositionOrder() {
+        return positionOrder;
+    }
+
+    public void setPositionOrder(Integer positionOrder) {
+        this.positionOrder = positionOrder;
     }
 }
